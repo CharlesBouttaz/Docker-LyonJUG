@@ -51,34 +51,149 @@
 				</section>
 
 				<section data-background="images/DockerLogo.JPG">
+                    <aside class="notes">
+                        Disclaimer
+                        Docker en 1 phrase
+                    </aside>
 				</section>
 
-                <section>
-                    <div class="imagecontainer">
-                        <img src="images/VM.png" class="vm-container-img">
-                        <img src="images/container.png" class="vm-container-img">
-                    </div>
+                <section id="fonctionnement">
+                    <section>
+                        <h2>VM vs Container</h2>
+                        <div class="imagecontainer">
+                            <img src="images/VM.png" class="vm-container-img">
+                            <img src="images/container.png" class="vm-container-img">
+                        </div>
+                    </section>
+                    <section>
+                        <ul>
+                            <li class="fragment">Rapidité</li>
+                            <li class="fragment">Partage de ressource = économie</li>
+                        </ul>
+                        <aside class="notes">
+                            Rapidité: des minutes à la seconde
+                            Partage: RAM et espace disque
+                        </aside>
+                    </section>
                 </section>
 
-                <section id="fragments">
-					<h2>Tester un script BDD ou un batch</h1>
-					<p>1. Charger une BDD</p>
-					<p>2. Lancer le script / batch</p>
-					<p>3. KO: base en état bancal</p>
-					<p>1. Charger une BDD</p>
-					<p>Rinse and repeat...</p>
-				</section>
+                <section>
+                    <h2>Union file system</h2>
+                    <img src="images/UnionFS.png" style="width: 50%"/>
+                    <ul>
+                        <li class="fragment">Read only partagé entre les container</li>
+                        <li class="fragment">Read write individuel a chaque container</li>
+                    </ul>
+                    <aside class="notes">
+                        On éco bcp de disque
+                    </aside>
+                </section>
 
-				<section id="fragments">
-					<h2>Partager une BDD de prod</h1>
-					<p>Dumper la prod</p>
-					<p>Charger une instance pour tout le monde</p>
-						<p>Conflits</p>
-					<p>Charger une instance par dev</p>
-						<p>Temps de chargement</p>
-					<p></p>
-					<p>Charger une BDD</p>
-				</section>
+                <section id="use-case-bdd">
+                    <section>
+                        <h2>Use cases</h2>
+                    </section>
+                    <section>
+                        <h2>Tester un script BDD ou un batch sans Docker</h2>
+                        <ol>
+                            <li class="fragment">Charger une BDD</li>
+                            <li class="fragment">Lancer le script / batch</li>
+                            <li class="fragment">KO: base en état bancal</li>
+                            <li class="fragment">GOTO 1</li>
+                        </ol>
+                    </section>
+                    <section>
+                        <h2>Tester un script BDD ou un batch avec Docker</h2>
+                        <ol>
+                            <li class="fragment">Créer / Télécharger une image Docker avec une BDD vierge</li>
+                            <li class="fragment">Importer le dump dans l'image</li>
+                            <li class="fragment">Lancer le container (ie instancier l'image)</li>
+                            <li class="fragment">Lancer le script</li>
+                            <li class="fragment">Relancer le container</li>
+                        </ol>
+                    </section>
+                    <section>
+                        <h2>Partager une BDD de prod sans docker</h2>
+                        <p class="fragment">Dumper la prod</p>
+                        <p class="fragment">a) Charger une instance pour tout le monde</p>
+                        <!-- TODO: RED-->
+                        <p class="fragment">Conflits</p>
+                        <p class="fragment">b) Charger une instance par dev</p>
+                        <!-- TODO: RED-->
+                        <p class="fragment">Ressources et temps perdu</p>
+                    </section>
+                    <section>
+                        <h2>Partager une BDD de prod avec docker</h2>
+                        <ol>
+                            <li class="fragment">Créer / Télécharger une image Docker avec une BDD vierge</li>
+                            <li class="fragment">Importer le dump dans l'image</li>
+                            <li class="fragment">Chaque dev instancie un container à partir de l'image</li>
+                        </ol>
+                    </section>
+                </section>
+
+                <section>
+                    <blockquote cite="http://searchservervirtualization.techtarget.com/definition/Our-Favorite-Technology-Quotations">
+                        &ldquo;Qu'est ce qui se passe quand quelque chose devient 10x-100x moins cher ?&rdquo;
+                    </blockquote>
+                    <p>
+                        <small><a href="http://twitter.com/jpetazzo">Jérôme Petazzoni - @jpetazzo</a></small>
+                    </p>
+                </section>
+
+                <section>
+                    <h2>Tests d'intégration avec Docker</h2>
+                    <p>MongoDB</p>
+                    <p>Besoin de tests isolés</p>
+                    <p>run en //</p>
+
+                </section>
+
+                <section>
+                    <h2>Docker et environement de developpement</h2>
+                </section>
+
+                <section>
+                    <h2>Dockerfile</h2>
+                    <img src="images/dockerfile-layers.png" style="width: 50%">
+                    <pre><code data-trim contenteditable>
+FROM python:2.7
+WORKDIR /code
+ADD requirements.txt /code/
+RUN pip install -r requirements.txt
+ADD . /code
+CMD python app.py
+                    </code></pre>
+                </section>
+
+                <section>
+                    <h2>Docker et déploiement</h2>
+                </section>
+
+                <section>
+                    <h2>Docker compose</h2>
+                    <pre><code data-trim contenteditable>
+web:
+build: .
+links:
+- db
+ports:
+- "8000:8000"
+db:
+image: postgres
+                    </code></pre>
+                </section>
+
+
+
+
+
+
+
+
+
+
+
 
 				<section>
 					<section>
