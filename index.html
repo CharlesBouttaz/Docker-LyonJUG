@@ -133,20 +133,38 @@
                 </section>
 
                 <section>
-                    <blockquote cite="http://searchservervirtualization.techtarget.com/definition/Our-Favorite-Technology-Quotations">
-                        &ldquo;Qu'est ce qui se passe quand quelque chose devient 10x-100x moins cher ?&rdquo;
-                    </blockquote>
-                    <p>
-                        <small><a href="http://twitter.com/jpetazzo">Jérôme Petazzoni - @jpetazzo</a></small>
-                    </p>
+                    <h2>Tests d'intégration avec Docker</h2>
+                    <p class="fragment">100 tests d'intégration</p>
+                    <p class="fragment">MongoDB</p>
+                    <p class="fragment">Besoin de recharger un état entre chaque test</p>
+                    <p class="fragment">Bonus: Versions différentes en prod</p>
+                    <p class="fragment">Trop long !</p>
+                    <aside class="notes">
+                        MongoDB ou autre
+                        tests isolés : je crée un user dans le test 1, je ne dois pas le voir dans le test 2
+                        trop long: même sur le serv d'integration continue
+                        Pas évident...
+                    </aside>
+                </section>
+
+                <section>
+                    <blockquote cite="http://twitter.com/jpetazzo">&ldquo;Qu'est ce qui se passe quand quelque chose devient 10x-100x moins cher ?&rdquo;</blockquote>
+                    <p><small>Jérôme Petazzoni - @jpetazzo</small></p>
                 </section>
 
                 <section>
                     <h2>Tests d'intégration avec Docker</h2>
-                    <p>MongoDB</p>
-                    <p>Besoin de tests isolés</p>
-                    <p>run en //</p>
-
+                    <p>Lancer un conainer avec la BDD pour chaque test</p>
+                    <p>Récupérer une image avec MongoDB</p>
+                    <p>Lancer l'image avant chaque test (<1s)</p>
+                    <p>Lancer les tests en parallèle</p>
+                    <p>Bonus: Paramétrer les tests avec les vesions a tester</p>
+                    <p>S'adapte aussi pour des tests fonctionnels Sélénium</p>
+                    <aside class="notes">
+                        Récupérer: depuis DockerHub puis injecter le dump
+                        Lancer l'image: REST API (client Java, JS, PHP)
+                        @Before -> @Rule
+                    </aside>
                 </section>
 
                 <section>
@@ -184,6 +202,15 @@ image: postgres
                     </code></pre>
                 </section>
 
+
+                <section>
+                    <h2>Ressources</h2>
+                    <ul>
+                        <li><a href="https://discoveringdocker.com/">Discovering Docker</a> - Geoffrey Bachelet</li>
+                        <li><a href="https://www.youtube.com/watch?v=bXSC3-mrgWA">45 minutes pour comprendre Docker</a> - Jérôme Petazzoni</li>
+                        <li><a href="https://github.com/mbaechler/integration-test-with-docker">Integration tests with Docker</a> - Matthieu Baechler</li>
+                    </ul>
+                </section>
 
 
 
