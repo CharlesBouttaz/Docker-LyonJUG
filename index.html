@@ -52,98 +52,117 @@
 
 				<section data-background="images/DockerLogo.JPG">
                     <aside class="notes">
-                        Disclaimer
-                        Docker en 1 phrase
+                        <ul>
+                            <li>Docker : créer, lancer et partager des containers</li>
+                            <li>Minimum de détail, des use case pour faciliter la vie du développeur.</li>
+                        </ul>
                     </aside>
 				</section>
 
                 <section id="fonctionnement">
-                    <section>
-                        <h2>VM vs Container</h2>
-                        <div class="imagecontainer">
-                            <img src="images/VM.png" class="vm-container-img">
-                            <img src="images/container.png" class="vm-container-img">
-                        </div>
-                    </section>
-                    <section>
+                    <h2>VM vs Container</h2>
+                    <span class="fragment">Pas d'OS</span><span class="fragment"> = Rapidité </span><span class="fragment"> + Economie de ressources</span>
+                    <div class="imagecontainer">
+                        <img src="images/VM.png" class="vm-container-img">
+                        <img src="images/container.png" class="vm-container-img">
+                    </div>
+                    <aside class="notes">
                         <ul>
-                            <li class="fragment">Rapidité</li>
-                            <li class="fragment">Partage de ressource = économie</li>
+                            <li>Pas de systeme d'exploitation</li>
+                            <li>Boot en sec vs min</li>
+                            <li>Partage RAM & disque</li>
                         </ul>
-                        <aside class="notes">
-                            Rapidité: des minutes à la seconde
-                            Partage: RAM et espace disque
-                        </aside>
-                    </section>
+                    </aside>
                 </section>
 
                 <section>
-                    <h2>Union file system</h2>
-                    <img src="images/UnionFS.png" style="width: 50%"/>
+                    <h2>Image et container</h2>
                     <ul>
-                        <li class="fragment">Read only partagé entre les container</li>
-                        <li class="fragment">Read write individuel a chaque container</li>
+                        <li class="fragment">Image = snapshot immutable d'une machine</li>
+                        <li class="fragment">Container = instance d'une image</li>
+                        <li class="fragment">Container ≈ parition lecture seule (image) + partition en écriture</li>
+                        <img src="images/UnionFS.png" style="width: 50%" class="fragment"/>
+                        <li class="fragment">Persistant vs Volatile</li>
                     </ul>
                     <aside class="notes">
-                        On éco bcp de disque
+                        <ul>
+                            <li>ex: fichier crée ds container existe plus si on recrée le container</li>
+                        </ul>
                     </aside>
                 </section>
 
                 <section id="use-case-bdd">
-                    <section>
-                        <h2>Use cases</h2>
-                    </section>
-                    <section>
-                        <h2>Tester un script BDD ou un batch sans Docker</h2>
-                        <ol>
-                            <li class="fragment">Charger une BDD</li>
-                            <li class="fragment">Lancer le script / batch</li>
-                            <li class="fragment">KO: base en état bancal</li>
-                            <li class="fragment">GOTO 1</li>
-                        </ol>
-                    </section>
-                    <section>
-                        <h2>Tester un script BDD ou un batch avec Docker</h2>
-                        <ol>
-                            <li class="fragment">Créer / Télécharger une image Docker avec une BDD vierge</li>
-                            <li class="fragment">Importer le dump dans l'image</li>
-                            <li class="fragment">Lancer le container (ie instancier l'image)</li>
-                            <li class="fragment">Lancer le script</li>
-                            <li class="fragment">Relancer le container</li>
-                        </ol>
-                    </section>
-                    <section>
-                        <h2>Partager une BDD de prod sans docker</h2>
-                        <p class="fragment">Dumper la prod</p>
+                    <h2>Use cases BDD</h2>
+                </section>
+                <section>
+                    <h2>Tester une migration de données BDD</h2>
+                    <ol>
+                        <li class="fragment">Installer la BDD</li>
+                        <li class="fragment">Charger un dump (10min)</li>
+                        <li class="fragment">Lancer le script / batch</li>
+                        <li class="fragment">KO</li>
+                        <li class="fragment">GOTO 2</li>
+                    </ol>
+                    <p class="fragment">Feedack loop: 10min</p>
+                    <aside class="notes">
+                        <ul>
+                            <li>Créer l'image: version iso prod ?</li>
+                            <li>Charger le dump: BDD met 10 min à charger ?</li>
+                            <li>KO: base en état bancal</li>
+                        </ul>
+                    </aside>
+                </section>
+                <section>
+                    <h2>Avec Docker</h2>
+                    <ol>
+                        <li class="fragment">Télécharger une image depuis DockerHub</li>
+                        <li class="fragment">Injecter le dump dans l'image</li>
+                        <li class="fragment">Sauvegarder l'image</li>
+                        <li class="fragment">Lancer le container (1sec)</li>
+                        <li class="fragment">Lancer le script / batch</li>
+                        <li class="fragment">KO</li>
+                        <li class="fragment">GOTO 4</li>
+                    </ol>
+                    <p class="fragment">Feedack loop: 1sec</p>
+                    <aside class="notes">
+                        <ul>
+                            <li>DockerHub= maven central</li>
+                            <li>Modifier l'image: save dans la partition read only</li>
+                            <li>Lancer: les modifications sont dans la partition read-write de l'autre container</li>
+                            <li>Lancement instantanné</li>
+                        </ul>
+                    </aside>
+                </section>
+                <section>
+                    <h2>Bonus: Partager une BDD de prod pour l'équipe de dev</h2>
+                    <ul>
+                        <li class="fragment">Sans docker</li>
                         <p class="fragment">a) Charger une instance pour tout le monde</p>
-                        <!-- TODO: RED-->
-                        <p class="fragment">Conflits</p>
                         <p class="fragment">b) Charger une instance par dev</p>
-                        <!-- TODO: RED-->
-                        <p class="fragment">Ressources et temps perdu</p>
-                    </section>
-                    <section>
-                        <h2>Partager une BDD de prod avec docker</h2>
-                        <ol>
-                            <li class="fragment">Créer / Télécharger une image Docker avec une BDD vierge</li>
-                            <li class="fragment">Importer le dump dans l'image</li>
-                            <li class="fragment">Chaque dev instancie un container à partir de l'image</li>
-                        </ol>
-                    </section>
+                        <li class="fragment">Avec docker</li>
+                        <p class="fragment">Créer une image avec le dump</p>
+                        <p class="fragment">Chaque dev lance son container</p>
+                    </ul>
+                    <p class="fragment">Isolation & économie</p>
+                    <aside class="notes">
+                        <li>a) Conflits</li>
+                        <li>b) Ressources et temps perdu</li>
+                        <li>Isolation: chaqun son instance</li>
+                        <li>Eco: Chaque container ne contient que le diff de chaque user</li>
+                    </aside>
                 </section>
 
-                <section>
+                <section id="use-case-integration-test">
                     <h2>Tests d'intégration avec Docker</h2>
-                    <p class="fragment">100 tests d'intégration</p>
-                    <p class="fragment">MongoDB</p>
-                    <p class="fragment">Besoin de recharger un état entre chaque test</p>
-                    <p class="fragment">Bonus: Versions différentes en prod</p>
-                    <p class="fragment">Trop long !</p>
+                    <ul>
+                        <li class="fragment">100 tests d'intégration</li>
+                        <li class="fragment">MongoDB</li>
+                        <li class="fragment">Besoin du même état pour chaque test</li>
+                    </ul>
                     <aside class="notes">
-                        MongoDB ou autre
-                        tests isolés : je crée un user dans le test 1, je ne dois pas le voir dans le test 2
-                        trop long: même sur le serv d'integration continue
-                        Pas évident...
+                        tests isolés : l'utilisateur du test 1 n'apparait pas dans le 2
+                        pas possible de test en //
+                        trop long: mm jenkins
                     </aside>
                 </section>
 
@@ -153,27 +172,65 @@
                 </section>
 
                 <section>
-                    <h2>Tests d'intégration avec Docker</h2>
-                    <p>Lancer un conainer avec la BDD pour chaque test</p>
-                    <p>Récupérer une image avec MongoDB</p>
-                    <p>Lancer l'image avant chaque test (<1s)</p>
-                    <p>Lancer les tests en parallèle</p>
-                    <p>Bonus: Paramétrer les tests avec les vesions a tester</p>
-                    <p>S'adapte aussi pour des tests fonctionnels Sélénium</p>
+                    <h2>Avec Docker</h2>
+                    <ul>
+                        <li class="fragment">Lancer l'image avant chaque test (<1s)</li>
+                        <li class="fragment">API REST : run @Before</li>
+                        <li class="fragment">Lancer les tests en parallèle</li>
+                    </ul>
+                    <p class="fragment">Valable aussi pour des tests fonctionnels ex. Sélénium</p>
                     <aside class="notes">
-                        Récupérer: depuis DockerHub puis injecter le dump
-                        Lancer l'image: REST API (client Java, JS, PHP)
-                        @Before -> @Rule
+                        <ul>
+                            <li>REST API: (client Java, JS, PHP)</li>
+                            <li>@Before -> @Rule</li>
+                            <li>tests en //: conf maven "nb thread"</li>
+                            <li>Bonus: Paramétrer les tests avec les vesions de BDD a tester (testNG)</li>
+                        </ul>
+                    </aside>
+                </section>
+
+                <section id="use-case-env-dev">
+                    <!--TODO: passer le layout en left / right-->
+                    <h2>Docker et environement de developpement</h2>
+                    <p class="fragment"><strong>Problème :</strong></p>
+                    <ol>
+                        <li class="fragment">Setup trop long</li>
+                        <li class="fragment">Works on my machine</li>
+                    </ol>
+                    <p class="fragment"><strong>Besoin : </strong></p>
+                    <blockquote class="fragment">Je veux un script qui me crée automatiquement et de manière reproductible un environement iso prod</blockquote>
+                    <aside class="notes">
+                        <ul>
+                            <li>1. Doc pas a jour</li>
+                            <li>Once ? Roadmap élastique, jonglage projet</li>
+                            <li>2. Versions différentes PhP, BDD</li>
+                            <li></li>
+                        </ul>
                     </aside>
                 </section>
 
                 <section>
-                    <h2>Docker et environement de developpement</h2>
+                    <h2>Virtual environement</h2>
+                    <ul>
+                        <li>Isolé</li>
+                        <li>Reproductible</li>
+                    </ul>
+                    <p></p>
+                    <aside class="notes">
+                        <ul>
+                            <li>Projet a php 4 :( / projet b php 5</li>
+                            <li>Infra as Code: "build once, run anyywhere"</li>
+                        </ul>
+                    </aside>
                 </section>
 
                 <section>
                     <h2>Dockerfile</h2>
-                    <img src="images/dockerfile-layers.png" style="width: 50%">
+                    <div class="left">
+                        <img src="images/dockerfile-layers.png">
+                    </div>
+                    <div class="right">
+                        <!--TODO: dockerfile debian, apt-get, jdk, tomcat-->
                     <pre><code data-trim contenteditable>
 FROM python:2.7
 WORKDIR /code
@@ -182,6 +239,8 @@ RUN pip install -r requirements.txt
 ADD . /code
 CMD python app.py
                     </code></pre>
+                    </div>
+
                 </section>
 
                 <section>
