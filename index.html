@@ -51,18 +51,10 @@
                     <aside class="notes">
                         <ul>
                             <li>Docker : outil pour créer, lancer et partager des containers</li>
-                            <li>Minimum de détail, des use case pour faciliter la vie du développeur.</li>
+                            <li>pas de détail: faciliter la vie du développeur</li>
                         </ul>
                     </aside>
 				</section>
-
-                <section>
-                    <h2>Docker + developpeur</h2>
-                    <span class="fragment">
-                        <h2>=</h2>
-                        <h2>💗</h2>
-                    </span>
-                </section>
 
                 <section id="fonctionnement">
                     <h2>VM vs Container</h2>
@@ -83,8 +75,8 @@
                 <section>
                     <h2>Container et Image</h2>
                     <ul>
-                        <li>IMAGE = snapshot read only d'une machine</li>
-                        <li>CONTAINER = instance d'une image + FS read write</li>
+                        <li>IMAGE = snapshot read only d'une machine démarrée</li>
+                        <li>CONTAINER = instance d'une image + partition écriture</li>
                         <!--<li class="fragment">Container ≈ parition lecture seule (image) + partition en écriture</li>-->
                         <!--<li class="fragment">Persistant vs Volatile</li>-->
                     </ul>
@@ -118,48 +110,49 @@
                         <li class="fragment">Créer une image : postgres + dump</li>
                         <li class="fragment">Chaque dev lance son container</li>
                     </ol>
-                    <p class="fragment">🏆 : Isolation + économies</p>
+                    <p></p>
+                    <p class="fragment">Isolation & économies de ressources</p>
                     <aside class="notes">
                         <li>Dump dans la partition read only</li>
                         <li>Les modifs -> read-write partition</li>
-                        <li>Isolation: chacun son instance</li>
+                        <li>Chaque dev est isolé dans son container</li>
                         <li>Eco: 1go RAM * 10 dev : 10 GO RAM</li>
                     </aside>
                 </section>
 
                 <!-- TO DELETE ? -->
-                <section>
-                    <h2>I. Bonus: Migration BDD</h2>
-                    <div class="left">
-                        <ol>
-                            <li>Charger le dump : ☕</li>
-                            <li>Lancer le script</li>
-                            <span class="fragment">
-                                <li><span style="color: #ff0000">Erreur !</span></li>
-                                <li>Recharger le dump : ☕</li>
-                            </span>
-                        </ol>
-                    </div>
-                    <div class="right">
-                        <ol>
-                            <span class="fragment">
-                                <li>Lancer le container : 📷</li>
-                                <li>Lancer le script</li>
-                            </span>
-                            <span class="fragment">
-                                <li><span style="color: #ffea7e">Erreur !</span></li>
-                                <li>Recharger le dump : 📷</li>
-                            </span>
-                        </ol>
-                    </div>
-                    <aside class="notes">
-                        <ul>
-                            <li>Version BDD iso prod ?</li>
-                            <li>Dump: 10 min à charger ?</li>
-                            <li>Feedback loop</li>
-                        </ul>
-                    </aside>
-                </section>
+                <!--<section>-->
+                    <!--<h2>I. Bonus: Migration BDD</h2>-->
+                    <!--<div class="left">-->
+                        <!--<ol>-->
+                            <!--<li>Charger le dump : ☕</li>-->
+                            <!--<li>Lancer le script</li>-->
+                            <!--<span class="fragment">-->
+                                <!--<li><span style="color: #ff0000">Erreur !</span></li>-->
+                                <!--<li>Recharger le dump : ☕</li>-->
+                            <!--</span>-->
+                        <!--</ol>-->
+                    <!--</div>-->
+                    <!--<div class="right">-->
+                        <!--<ol>-->
+                            <!--<span class="fragment">-->
+                                <!--<li>Lancer le container : 📷</li>-->
+                                <!--<li>Lancer le script</li>-->
+                            <!--</span>-->
+                            <!--<span class="fragment">-->
+                                <!--<li><span style="color: #ffea7e">Erreur !</span></li>-->
+                                <!--<li>Recharger le dump : 📷</li>-->
+                            <!--</span>-->
+                        <!--</ol>-->
+                    <!--</div>-->
+                    <!--<aside class="notes">-->
+                        <!--<ul>-->
+                            <!--<li>Version BDD iso prod ?</li>-->
+                            <!--<li>Dump: 10 min à charger ?</li>-->
+                            <!--<li>Feedback loop</li>-->
+                        <!--</ul>-->
+                    <!--</aside>-->
+                <!--</section>-->
 
                                             <!-- USE CASE : INTEGRATION TESTS -->
 
@@ -171,10 +164,9 @@
                             <li>MongoDB</li>
                         </span>
                         <span class="fragment">
-                            <li>Jeu de données identique pour chaque test</li>
-                            <li>Test1 ➡ import ➡ Test2 ➡ import ...</li>
+                            <li>Jeu de données identique pour chaque test <br/>
+                            Test1 ➡ import ➡ Test2 ➡ import ...</li>
                         </span>
-                        <li class="fragment">⏰ : 4h ➡ 💀</li>
                     </ul>
                     <aside class="notes">
                         <li>copie fraiche : T1 create user1 ; T2 user1 existe plus</li>
@@ -190,7 +182,7 @@
                         <li class="fragment">@Before : "HTTP POST /containers/create"</li>
                         <li class="fragment">1 thread par test</li>
                     </ul>
-                    <p class="fragment">Applicable pour des tests fonctionnels <strong>ex. Sélénium</strong></p>
+                    <p class="fragment">Marche aussi pour des tests fonctionnels <strong>Sélénium</strong></p>
                     <aside class="notes">
                         <ul>
                             <li>REST API: (client Java, JS, PHP)</li>
@@ -204,77 +196,57 @@
                                         <!-- USE CASE : ENV DE TRAVAIL -->
 
                 <section id="use-case-env-dev">
-                    <!--TODO: passer le layout en left / right-->
-                    <h2>III. Docker et environement de developpement</h2>
+                    <h2>III. Docker et environement de travail</h2>
                     <p class="fragment"><strong>Problème :</strong></p>
                     <ol>
                         <li class="fragment">Setup trop long</li>
                         <li class="fragment">Works on my machine</li>
                     </ol>
-                    <p class="fragment"><strong>Besoin : </strong></p>
-                    <blockquote class="fragment">Je veux un script qui me crée automatiquement et de manière reproductible un environement iso prod</blockquote>
                     <aside class="notes">
                         <ul>
                             <li>1. Doc pas a jour</li>
-                            <li>Once ? Roadmap élastique, jonglage projet</li>
                             <li>2. Versions différentes PhP, BDD</li>
+                            <li>2. Sous partie de l'appli en local</li>
                             <li></li>
                         </ul>
                     </aside>
                 </section>
 
                 <section>
-                    <h2>Virtual environement</h2>
-                    <ul>
-                        <li>Isolé</li>
-                        <li>Reproductible</li>
-                    </ul>
-                    <p></p>
-                    <aside class="notes">
-                        <ul>
-                            <li>Projet a php 4 :( / projet b php 5</li>
-                            <li>Infra as Code: "build once, run anyywhere"</li>
-                        </ul>
-                    </aside>
+                    <blockquote>je veux un script qui crée automatiquement un environement iso prod"</blockquote>
+                    <p class="fragment">aka Infrastructure as Code</p>
                 </section>
 
                 <section>
-                    <h2>Dockerfile</h2>
+                    <h2>III. Dockerfile</h2>
                     <div class="left">
-                        <img src="images/dockerfile-layers.png">
+                        <ul>
+                            <li><span class="dockerFileKeyword">FROM</span> debian:wheezy</li>
+                            <span class="fragment">
+                                <li><span class="dockerFileKeyword">RUN</span> apt-get install tomcat7</li>
+                                <li><span class="dockerFileKeyword">RUN</span> apt-get install java8</li>
+                            </span>
+                            <li class="fragment"><span class="dockerFileKeyword">ADD</span> /host-sources /tomcat</li>
+                            <li class="fragment"><span class="dockerFileKeyword">EXPOSE</span> 8080</li>
+                            <li class="fragment"><span class="dockerFileKeyword">CMD</span> service tomcat7 start</li>
+                        </ul>
                     </div>
                     <div class="right">
-                        <!--TODO: dockerfile debian, apt-get, jdk, tomcat-->
-                    <pre><code data-trim contenteditable>
-FROM python:2.7
-WORKDIR /code
-ADD requirements.txt /code/
-RUN pip install -r requirements.txt
-ADD . /code
-CMD python app.py
-                    </code></pre>
+                        <img src="images/dockerfile-layers.png">
                     </div>
-
+                    <div class="fragment">$ docker build ; docker run</div>
                 </section>
 
                 <section>
-                    <h2>Docker et déploiement</h2>
+                    <h2>Orchestration multi containers</h2>
+                    <h3>Docker compose</h3>
+                    <img src="images/compose.jpg">
                 </section>
 
                 <section>
-                    <h2>Docker compose</h2>
-                    <pre><code data-trim contenteditable>
-web:
-build: .
-links:
-- db
-ports:
-- "8000:8000"
-db:
-image: postgres
-                    </code></pre>
+                    <h2>III. Countinous Integration</h2>
+                    <img src="images/Jenkins.png">
                 </section>
-
 
                 <section>
                     <h2>Ressources</h2>

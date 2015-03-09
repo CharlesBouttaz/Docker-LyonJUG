@@ -7,6 +7,10 @@ div.right {
     width: 50%;
 }
 
+span.dockerFileKeyword {
+    color: #ffafa9;
+}
+
 div.vm-container-div {
     vertical-align: bottom;
     display: table-cell;
