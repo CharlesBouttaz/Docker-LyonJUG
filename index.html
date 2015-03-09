@@ -48,137 +48,149 @@
 					<p>
 						<small><a href="http://twitter.com/CharlesBouttaz">@CharlesBouttaz</a></small>
 					</p>
-				</section>
-
-				<section data-background="images/DockerLogo.JPG">
                     <aside class="notes">
                         <ul>
-                            <li>Docker : créer, lancer et partager des containers</li>
+                            <li>Docker : outil pour créer, lancer et partager des containers</li>
                             <li>Minimum de détail, des use case pour faciliter la vie du développeur.</li>
                         </ul>
                     </aside>
 				</section>
 
+                <section>
+                    <h2>Docker + developpeur</h2>
+                    <span class="fragment">
+                        <h2>=</h2>
+                        <h2>💗</h2>
+                    </span>
+                </section>
+
                 <section id="fonctionnement">
                     <h2>VM vs Container</h2>
-                    <span class="fragment">Pas d'OS</span><span class="fragment"> = Rapidité </span><span class="fragment"> + Economie de ressources</span>
+                    <span class="fragment">Pas d'OS = Rapidité + Economie de ressources</span>
                     <div class="imagecontainer">
                         <img src="images/VM.png" class="vm-container-img">
                         <img src="images/container.png" class="vm-container-img">
                     </div>
                     <aside class="notes">
                         <ul>
-                            <li>Pas de systeme d'exploitation</li>
                             <li>Boot en sec vs min</li>
-                            <li>Partage RAM & disque</li>
+                            <li>Partage RAM & disque 1go</li>
+                            <li>OS Linux hote qui partage</li>
                         </ul>
                     </aside>
                 </section>
 
                 <section>
-                    <h2>Image et container</h2>
+                    <h2>Container et Image</h2>
                     <ul>
-                        <li class="fragment">Image = snapshot immutable d'une machine</li>
-                        <li class="fragment">Container = instance d'une image</li>
-                        <li class="fragment">Container ≈ parition lecture seule (image) + partition en écriture</li>
-                        <img src="images/UnionFS.png" style="width: 50%" class="fragment"/>
-                        <li class="fragment">Persistant vs Volatile</li>
+                        <li>IMAGE = snapshot read only d'une machine</li>
+                        <li>CONTAINER = instance d'une image + FS read write</li>
+                        <!--<li class="fragment">Container ≈ parition lecture seule (image) + partition en écriture</li>-->
+                        <!--<li class="fragment">Persistant vs Volatile</li>-->
                     </ul>
+                        <img src="images/UnionFS.png" style="width: 50%"/>
                     <aside class="notes">
                         <ul>
-                            <li>ex: fichier crée ds container existe plus si on recrée le container</li>
+                            <li>Snapshot d'une machine démarrée (suspendue)</li>
+                            <li>ex: fichier crée ds container A existe plus si on recrée le container</li>
                         </ul>
                     </aside>
                 </section>
+
+                                        <!-- USE CASE : BDD -->
 
                 <section id="use-case-bdd">
-                    <h2>Use cases BDD</h2>
-                </section>
-                <section>
-                    <h2>Tester une migration de données BDD</h2>
-                    <ol>
-                        <li class="fragment">Installer la BDD</li>
-                        <li class="fragment">Charger un dump (10min)</li>
-                        <li class="fragment">Lancer le script / batch</li>
-                        <li class="fragment">KO</li>
-                        <li class="fragment">GOTO 2</li>
-                    </ol>
-                    <p class="fragment">Feedack loop: 10min</p>
-                    <aside class="notes">
-                        <ul>
-                            <li>Créer l'image: version iso prod ?</li>
-                            <li>Charger le dump: BDD met 10 min à charger ?</li>
-                            <li>KO: base en état bancal</li>
-                        </ul>
-                    </aside>
-                </section>
-                <section>
-                    <h2>Avec Docker</h2>
-                    <ol>
-                        <li class="fragment">Télécharger une image depuis DockerHub</li>
-                        <li class="fragment">Injecter le dump dans l'image</li>
-                        <li class="fragment">Sauvegarder l'image</li>
-                        <li class="fragment">Lancer le container (1sec)</li>
-                        <li class="fragment">Lancer le script / batch</li>
-                        <li class="fragment">KO</li>
-                        <li class="fragment">GOTO 4</li>
-                    </ol>
-                    <p class="fragment">Feedack loop: 1sec</p>
-                    <aside class="notes">
-                        <ul>
-                            <li>DockerHub= maven central</li>
-                            <li>Modifier l'image: save dans la partition read only</li>
-                            <li>Lancer: les modifications sont dans la partition read-write de l'autre container</li>
-                            <li>Lancement instantanné</li>
-                        </ul>
-                    </aside>
-                </section>
-                <section>
-                    <h2>Bonus: Partager une BDD de prod pour l'équipe de dev</h2>
+                    <h2>I. Partager une BDD de prod pour l'équipe de dev</h2>
                     <ul>
-                        <li class="fragment">Sans docker</li>
-                        <p class="fragment">a) Charger une instance pour tout le monde</p>
+                        <p>a) Charger une instance pour tout le monde</p>
                         <p class="fragment">b) Charger une instance par dev</p>
-                        <li class="fragment">Avec docker</li>
-                        <p class="fragment">Créer une image avec le dump</p>
-                        <p class="fragment">Chaque dev lance son container</p>
                     </ul>
-                    <p class="fragment">Isolation & économie</p>
                     <aside class="notes">
                         <li>a) Conflits</li>
                         <li>b) Ressources et temps perdu</li>
-                        <li>Isolation: chaqun son instance</li>
-                        <li>Eco: Chaque container ne contient que le diff de chaque user</li>
                     </aside>
                 </section>
+
+                <section>
+                    <h2>I. Partager une BDD avec Docker</h2>
+                    <ol>
+                        <li><pre><code data-trim>docker pull postgres:9.1.15</code></pre></li>
+                        <li class="fragment">Créer une image : postgres + dump</li>
+                        <li class="fragment">Chaque dev lance son container</li>
+                    </ol>
+                    <p class="fragment">🏆 : Isolation + économies</p>
+                    <aside class="notes">
+                        <li>Dump dans la partition read only</li>
+                        <li>Les modifs -> read-write partition</li>
+                        <li>Isolation: chacun son instance</li>
+                        <li>Eco: 1go RAM * 10 dev : 10 GO RAM</li>
+                    </aside>
+                </section>
+
+                <!-- TO DELETE ? -->
+                <section>
+                    <h2>I. Bonus: Migration BDD</h2>
+                    <div class="left">
+                        <ol>
+                            <li>Charger le dump : ☕</li>
+                            <li>Lancer le script</li>
+                            <span class="fragment">
+                                <li><span style="color: #ff0000">Erreur !</span></li>
+                                <li>Recharger le dump : ☕</li>
+                            </span>
+                        </ol>
+                    </div>
+                    <div class="right">
+                        <ol>
+                            <span class="fragment">
+                                <li>Lancer le container : 📷</li>
+                                <li>Lancer le script</li>
+                            </span>
+                            <span class="fragment">
+                                <li><span style="color: #ffea7e">Erreur !</span></li>
+                                <li>Recharger le dump : 📷</li>
+                            </span>
+                        </ol>
+                    </div>
+                    <aside class="notes">
+                        <ul>
+                            <li>Version BDD iso prod ?</li>
+                            <li>Dump: 10 min à charger ?</li>
+                            <li>Feedback loop</li>
+                        </ul>
+                    </aside>
+                </section>
+
+                                            <!-- USE CASE : INTEGRATION TESTS -->
 
                 <section id="use-case-integration-test">
-                    <h2>Tests d'intégration avec Docker</h2>
+                    <h2>II. Tests d'intégration</h2>
                     <ul>
-                        <li class="fragment">100 tests d'intégration</li>
-                        <li class="fragment">MongoDB</li>
-                        <li class="fragment">Besoin du même état pour chaque test</li>
+                        <span class="fragment">
+                            <li>100 tests d'intégration</li>
+                            <li>MongoDB</li>
+                        </span>
+                        <span class="fragment">
+                            <li>Jeu de données identique pour chaque test</li>
+                            <li>Test1 ➡ import ➡ Test2 ➡ import ...</li>
+                        </span>
+                        <li class="fragment">⏰ : 4h ➡ 💀</li>
                     </ul>
                     <aside class="notes">
-                        tests isolés : l'utilisateur du test 1 n'apparait pas dans le 2
-                        pas possible de test en //
-                        trop long: mm jenkins
+                        <li>copie fraiche : T1 create user1 ; T2 user1 existe plus</li>
+                        <li>Test en // impossible</li>
+                        <li>Feedback loop too long (mm jenkins)</li>
                     </aside>
                 </section>
 
                 <section>
-                    <blockquote cite="http://twitter.com/jpetazzo">&ldquo;Qu'est ce qui se passe quand quelque chose devient 10x-100x moins cher ?&rdquo;</blockquote>
-                    <p><small>Jérôme Petazzoni - @jpetazzo</small></p>
-                </section>
-
-                <section>
-                    <h2>Avec Docker</h2>
+                    <h2>II. On passe la seconde</h2>
                     <ul>
-                        <li class="fragment">Lancer l'image avant chaque test (<1s)</li>
-                        <li class="fragment">API REST : run @Before</li>
-                        <li class="fragment">Lancer les tests en parallèle</li>
+                        <li class="fragment">Lancer le container avant chaque test (<1s)</li>
+                        <li class="fragment">@Before : "HTTP POST /containers/create"</li>
+                        <li class="fragment">1 thread par test</li>
                     </ul>
-                    <p class="fragment">Valable aussi pour des tests fonctionnels ex. Sélénium</p>
+                    <p class="fragment">Applicable pour des tests fonctionnels <strong>ex. Sélénium</strong></p>
                     <aside class="notes">
                         <ul>
                             <li>REST API: (client Java, JS, PHP)</li>
@@ -189,9 +201,11 @@
                     </aside>
                 </section>
 
+                                        <!-- USE CASE : ENV DE TRAVAIL -->
+
                 <section id="use-case-env-dev">
                     <!--TODO: passer le layout en left / right-->
-                    <h2>Docker et environement de developpement</h2>
+                    <h2>III. Docker et environement de developpement</h2>
                     <p class="fragment"><strong>Problème :</strong></p>
                     <ol>
                         <li class="fragment">Setup trop long</li>
