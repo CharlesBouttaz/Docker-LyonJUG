@@ -50,8 +50,8 @@
 					</p>
                     <aside class="notes">
                         <ul>
-                            <li>Docker : outil pour créer, lancer et partager des containers</li>
                             <li>pas de détail: faciliter la vie du développeur</li>
+                            <li>Docker : outil pour créer, lancer et partager des containers</li>
                         </ul>
                     </aside>
 				</section>
@@ -120,44 +120,88 @@
                     </aside>
                 </section>
 
-                <!-- TO DELETE ? -->
-                <!--<section>-->
-                    <!--<h2>I. Bonus: Migration BDD</h2>-->
-                    <!--<div class="left">-->
-                        <!--<ol>-->
-                            <!--<li>Charger le dump : ☕</li>-->
-                            <!--<li>Lancer le script</li>-->
-                            <!--<span class="fragment">-->
-                                <!--<li><span style="color: #ff0000">Erreur !</span></li>-->
-                                <!--<li>Recharger le dump : ☕</li>-->
-                            <!--</span>-->
-                        <!--</ol>-->
-                    <!--</div>-->
-                    <!--<div class="right">-->
-                        <!--<ol>-->
-                            <!--<span class="fragment">-->
-                                <!--<li>Lancer le container : 📷</li>-->
-                                <!--<li>Lancer le script</li>-->
-                            <!--</span>-->
-                            <!--<span class="fragment">-->
-                                <!--<li><span style="color: #ffea7e">Erreur !</span></li>-->
-                                <!--<li>Recharger le dump : 📷</li>-->
-                            <!--</span>-->
-                        <!--</ol>-->
-                    <!--</div>-->
-                    <!--<aside class="notes">-->
-                        <!--<ul>-->
-                            <!--<li>Version BDD iso prod ?</li>-->
-                            <!--<li>Dump: 10 min à charger ?</li>-->
-                            <!--<li>Feedback loop</li>-->
-                        <!--</ul>-->
-                    <!--</aside>-->
-                <!--</section>-->
+                                        <!-- USE CASE : ENV DE TRAVAIL -->
+
+                <section id="use-case-env-dev">
+                    <h2>II. Environement de développement</h2>
+                    <p><strong>Problème :</strong></p>
+                    <ol>
+                        <li>Setup trop long</li>
+                        <li class="fragment">Works on my machine</li>
+                    </ol>
+                    <aside class="notes">
+                        <ul>
+                            <li>1. Doc pas a jour</li>
+                            <li>2. Versions différentes PhP, BDD</li>
+                            <li>2. Sous partie de l'appli en local</li>
+                            <li></li>
+                        </ul>
+                    </aside>
+                </section>
+
+                <section>
+                    <h2>Docker</h2>
+                    <h3>Mon environement de dev <br/> dans un container</h3>
+                    <p class="fragment">via Infrastructure as Code</p>
+                </section>
+
+                <section>
+                    <h2>Dockerfile</h2>
+                    <div class="left">
+                        <ul>
+                            <li><span class="dockerFileKeyword">FROM</span> debian:wheezy</li>
+                            <span class="fragment">
+                                <li><span class="dockerFileKeyword">RUN</span> apt-get install java8</li>
+                                <li><span class="dockerFileKeyword">RUN</span> apt-get install tomcat7</li>
+                            </span>
+                            <li class="fragment"><span class="dockerFileKeyword">ADD</span> /host-sources /tomcat</li>
+                            <li class="fragment"><span class="dockerFileKeyword">EXPOSE</span> 8080</li>
+                            <li class="fragment"><span class="dockerFileKeyword">CMD</span> service tomcat7 start</li>
+                        </ul>
+                    </div>
+                    <div class="right">
+                        <img src="images/dockerfile-layers.png">
+                    </div>
+                    <div class="fragment">$ docker build ; docker run</div>
+                </section>
+
+                <section>
+                    <h2>Orchestration <br/> multi containers</h2>
+                    <h3>Docker compose</h3>
+                    <img src="images/compose.jpg">
+                </section>
+
+                <section>
+                    <h2>Countinous Integration</h2>
+                    <img src="images/Jenkins.png">
+                </section>
+
+                <section>
+                    <h2>Récap Docker</h2>
+                    <ul>
+                        <li>Container = VM allégée créée a partir d'une image</li>
+                        <li>Facile de créer, lancer et partager des environements</li>
+                    </ul>
+                    <blockquote class="fragment">"Be a lazy (but productive) developer"</blockquote>
+                </section>
+
+                <section>
+                    <h2>Ressources</h2>
+                    <ul>
+                        <li><a href="https://discoveringdocker.com/">Discovering Docker</a> - Geoffrey Bachelet</li>
+                        <li><a href="https://www.youtube.com/watch?v=bXSC3-mrgWA">45 minutes pour comprendre Docker</a> - Jérôme Petazzoni</li>
+                        <li><a href="http://www.meetup.com/fr/Docker-Lyon">Meetup Docker Lyon</a> - 16/03</li>
+                        <li><a href="https://github.com/mbaechler/integration-test-with-docker">Integration tests with Docker</a> - Matthieu Baechler</li>
+                    </ul>
+                </section>
+
+                                            <!--END - BONUS SECTION-->
+
 
                                             <!-- USE CASE : INTEGRATION TESTS -->
 
                 <section id="use-case-integration-test">
-                    <h2>II. Tests d'intégration</h2>
+                    <h2>Tests d'intégration</h2>
                     <ul>
                         <span class="fragment">
                             <li>100 tests d'intégration</li>
@@ -165,7 +209,7 @@
                         </span>
                         <span class="fragment">
                             <li>Jeu de données identique pour chaque test <br/>
-                            Test1 ➡ import ➡ Test2 ➡ import ...</li>
+                            Test1 ? import ? Test2 ? import ...</li>
                         </span>
                     </ul>
                     <aside class="notes">
@@ -176,7 +220,7 @@
                 </section>
 
                 <section>
-                    <h2>II. On passe la seconde</h2>
+                    <h2>On passe la seconde</h2>
                     <ul>
                         <li class="fragment">Lancer le container avant chaque test (<1s)</li>
                         <li class="fragment">@Before : "HTTP POST /containers/create"</li>
@@ -193,68 +237,37 @@
                     </aside>
                 </section>
 
-                                        <!-- USE CASE : ENV DE TRAVAIL -->
-
-                <section id="use-case-env-dev">
-                    <h2>III. Docker et environement de travail</h2>
-                    <p class="fragment"><strong>Problème :</strong></p>
-                    <ol>
-                        <li class="fragment">Setup trop long</li>
-                        <li class="fragment">Works on my machine</li>
-                    </ol>
-                    <aside class="notes">
-                        <ul>
-                            <li>1. Doc pas a jour</li>
-                            <li>2. Versions différentes PhP, BDD</li>
-                            <li>2. Sous partie de l'appli en local</li>
-                            <li></li>
-                        </ul>
-                    </aside>
-                </section>
-
                 <section>
-                    <blockquote>je veux un script qui crée automatiquement un environement iso prod"</blockquote>
-                    <p class="fragment">aka Infrastructure as Code</p>
-                </section>
-
-                <section>
-                    <h2>III. Dockerfile</h2>
+                    <h2>Bonus: Migration BDD</h2>
                     <div class="left">
-                        <ul>
-                            <li><span class="dockerFileKeyword">FROM</span> debian:wheezy</li>
+                        <ol>
+                            <li>Charger le dump : ☕</li>
+                            <li>Lancer le script</li>
                             <span class="fragment">
-                                <li><span class="dockerFileKeyword">RUN</span> apt-get install tomcat7</li>
-                                <li><span class="dockerFileKeyword">RUN</span> apt-get install java8</li>
+                                <li><span style="color: #ff0000">Erreur !</span></li>
+                                <li>Recharger le dump : ☕</li>
                             </span>
-                            <li class="fragment"><span class="dockerFileKeyword">ADD</span> /host-sources /tomcat</li>
-                            <li class="fragment"><span class="dockerFileKeyword">EXPOSE</span> 8080</li>
-                            <li class="fragment"><span class="dockerFileKeyword">CMD</span> service tomcat7 start</li>
-                        </ul>
+                        </ol>
                     </div>
                     <div class="right">
-                        <img src="images/dockerfile-layers.png">
+                        <ol>
+                            <span class="fragment">
+                                <li>Lancer le container : 📷</li>
+                                <li>Lancer le script</li>
+                            </span>
+                            <span class="fragment">
+                                <li><span style="color: #ffea7e">Erreur !</span></li>
+                                <li>Recharger le dump : 📷</li>
+                            </span>
+                        </ol>
                     </div>
-                    <div class="fragment">$ docker build ; docker run</div>
-                </section>
-
-                <section>
-                    <h2>Orchestration multi containers</h2>
-                    <h3>Docker compose</h3>
-                    <img src="images/compose.jpg">
-                </section>
-
-                <section>
-                    <h2>III. Countinous Integration</h2>
-                    <img src="images/Jenkins.png">
-                </section>
-
-                <section>
-                    <h2>Ressources</h2>
-                    <ul>
-                        <li><a href="https://discoveringdocker.com/">Discovering Docker</a> - Geoffrey Bachelet</li>
-                        <li><a href="https://www.youtube.com/watch?v=bXSC3-mrgWA">45 minutes pour comprendre Docker</a> - Jérôme Petazzoni</li>
-                        <li><a href="https://github.com/mbaechler/integration-test-with-docker">Integration tests with Docker</a> - Matthieu Baechler</li>
-                    </ul>
+                    <aside class="notes">
+                        <ul>
+                            <li>Version BDD iso prod ?</li>
+                            <li>Dump: 10 min à charger ?</li>
+                            <li>Feedback loop</li>
+                        </ul>
+                    </aside>
                 </section>
 			</div>
 
